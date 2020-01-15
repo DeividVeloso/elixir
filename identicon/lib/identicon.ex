@@ -13,7 +13,7 @@ defmodule Identicon do
 
   def pick_color(image) do
    %Identicon.Image{hex: [r, g, b | _tail]} = image
-  # Update a MAP with | 
+  # Update a MAP with |
    %Identicon.Image{image | color: {r, g, b}}
   end
 
@@ -24,17 +24,23 @@ defmodule Identicon do
     %Identicon.Image{hex: hex}
   end
 
-  def test(numbers, size) do 
-    IO.puts numbers
+  def test(numbers, size) do
     count = trunc(length(numbers) / size)
-    chunk_doido(numbers, count - 1, size)
+    chunk_doido([], numbers, count - 1, size)
   end
 
-  def chunk_doido(numbers, count, size) when count >= 1 do
-    [a, b, c | _tail] = numbers
-    numbers = Enum.drop(numbers, size)
-    test(numbers, size)
+  @spec chunk_doido(any, [...], any, number) :: no_return
+  defp chunk_doido(acc, numbers, count, size) when count >= 0 do
+    [a, b, c | tail] = numbers
+    acc = [[a, b, c] | acc ]
+
+    chunk_doido(acc, tail, count - 1, size)
   end
+
+  defp chunk_doido(acc, _, _, _) do
+    acc
+  end
+
 
   # def chunk_na_mao(array, size) do
   #   count = trunc(length(array) / size)
@@ -44,7 +50,7 @@ defmodule Identicon do
   # defp do_chunk_na_mao(acc, array, count, size) when count >= 1 do
   #   [a, b, c | tail] = array
   #   acc = [[a, b, c] | acc ]
-    
+
   #   do_chunk_na_mao(acc, tail, count - 1, size)
   # end
 
@@ -56,7 +62,7 @@ defmodule Identicon do
   end
 
   defp do_chunk_na_mao(acc, [], _size), do: acc
-  
+
   defp do_chunk_na_mao(acc, array, size) do
     {h, t} = split_array(array, size)
     acc = [h | acc]
